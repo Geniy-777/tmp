@@ -1,0 +1,5 @@
+Веб-фреймворки Django, Flask, aiohttp, Tornado и т. д. (и знать о существовании остальных).
+Протоколы и API: в первую очередь http, JSON-RPC, Protocol Buffers, gRPC.
+ORM и миграции, реляционные базы данных, SQLAlchemy, SQL, PostgreSQL, MySQL.
+Основы HTML, CSS, Bootstrap, а также JS-фреймворки и JQuery.
+Принципы работы приложений на продакшене, тестирование, юнит-тесты, автотесты, системы контроля версий, git.
