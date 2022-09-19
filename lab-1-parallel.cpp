@@ -1,5 +1,8 @@
-﻿#include <mpi.h>
+/* Простая передача-прием: MPI_Send, MPI_Recv Завершение по ошибке:
+MPI_Abort */
+#include <mpi.h>
 #include <stdio.h>
+#include <cmath>
 /* Идентификаторы сообщений */
 #define tagFloatData 1
 #define tagDoubleData 2
@@ -7,7 +10,10 @@
 int main(int argc, char** argv)
 {
 	int size, rank, count, i;
+	int n = 10, m = 1000;
+	int* bb = new int[m];
 	double t1, t2, t3;
+	double a;
 	float floatData[10];
 	double doubleData[20];
 	MPI_Status status;
@@ -37,7 +43,14 @@ int main(int argc, char** argv)
 
 	if (rank == 0)
 	{
-		for (i = 0;i < 10;i++)floatData[i] = i;for (i = 0;i < 20;i++)doubleData[i] = -i;
+		for (i = 0;i < 10;i++)
+			floatData[i] = i;
+
+		for (i = 0;i < 20;i++)
+			doubleData[i] = -i;
+		for (i = 0; i < m; i++)
+			bb[i] = i + 0;
+
 		/* Передача из ветви 0 в ветвь 1 */
 		MPI_Send(
 			floatData, /* адрес передаваемого массива */
@@ -49,11 +62,17 @@ int main(int argc, char** argv)
 			MPI_COMM_WORLD); /* описатель области связи, черезкоторую происходит передача */
 			/* и еще одна передача: данные другого типа */
 		t1 = MPI_Wtime();
-
-		MPI_Send(doubleData, 6, MPI_DOUBLE, 1, tagDoubleData,
+		MPI_Send(bb, 6, MPI_DOUBLE, 1, tagDoubleData,
 			MPI_COMM_WORLD);
 		t1 = MPI_Wtime() - t1;
 
+		t2 = MPI_Wtime();
+		for (i = 1; i <= m; i++)
+			a = sin(i) * cos(i) * pow((i + 0.), 0.75) * exp((i + 0.) / m);
+		t2 = MPI_Wtime() - t2;
+
+		printf("время Send = " + t1 + " время нагрузки = " + t2 + " \n");
+	
 	}
 	else
 	{
